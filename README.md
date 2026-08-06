@@ -2,18 +2,17 @@
 
 A simple ML project that predicts credit card fraud **as a probability**, then converts that probability into a business decision — **Allow, Manual Review, or Block** — using expected financial loss.
 
-Instead of a model that just says *Fraud* or *Not Fraud*, this project asks: **given the evidence, what is the probability this transaction is fraudulent?** That's Bayesian thinking — starting from a prior belief (fraud is rare) and updating it as evidence comes in.
+Instead of a model that just says *Fraud* or *Not Fraud*, this project asks: **given the evidence, what is the probability this transaction is fraudulent?** 
 
 ---
 
-## Highlights
+## Key Concepts
 
-### Statistics Used
-- Probability
-- Conditional Probability (Implicitly)
-- Likelihood (Implicitly)
-- Class Imbalance
-- Calibration
+### Statistics & Decision Theory
+- Probability Estimation
+- Conditional Probability
+- Class Imbalance Handling
+- Probability Calibration
 - Expected Value
 - Cost-sensitive Decision Making
 
@@ -21,8 +20,9 @@ Instead of a model that just says *Fraud* or *Not Fraud*, this project asks: **g
 - Logistic Regression
 - Random Forest
 - XGBoost
-- Probability Calibration
-- Feature Engineering
+- Model Selection (ROC-AUC)
+- Probability Calibration (Isotonic Regression)
+- Feature Scaling
 - Cross Validation
 
 ---
@@ -67,7 +67,7 @@ streamlit run app.py
 
 A raw model can be overconfident — a "90% fraud" prediction should mean that, out of 100 similar transactions, about 90 really are fraud. Most raw models don't satisfy this by default.
 
-`train_model.py` fixes this with `CalibratedClassifierCV`, which corrects the model's raw output using the class balance in the data (**prior**) and the model's own confidence (**likelihood**), producing a trustworthy **posterior** probability — the same idea behind Bayes' Theorem, applied through scikit-learn.
+`train_model.py` fixes this with `CalibratedClassifierCV`, which recalibrates the model's raw probability estimates using isotonic regression on held-out validation data. The resulting probabilities better reflect the observed probability of fraud, making them reliable enough for expected loss estimation, risk scoring, and business decision-making.
 
 ---
 
@@ -84,6 +84,18 @@ A raw model can be overconfident — a "90% fraud" prediction should mean that, 
 BLOCK_THRESHOLD & REVIEW_THRESHOLD are thresholds for risk levels and recommended actions. These can be tuned based on business needs.
 
 It also computes **Expected Loss = Fraud Probability × Amount**, so a large low-risk transaction can be fairly compared against a small high-risk one — the same cost-sensitive decision-making used in real fraud systems.
+
+---
+
+## Skills Demonstrated
+
+- Machine Learning Model Development
+- Probability Calibration
+- Fraud Risk Scoring
+- Cost-sensitive Decision Making
+- Streamlit Dashboard Development
+- Model Selection & Evaluation
+- Financial Risk Analytics
 
 ---
 
