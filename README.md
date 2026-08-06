@@ -1,4 +1,4 @@
-# Bayesian Fraud Detection & Risk Scoring System
+# Probabilistic Fraud Detection & Risk Scoring System
 
 A simple ML project that predicts credit card fraud **as a probability**, then converts that probability into a business decision — **Allow, Manual Review, or Block** — using expected financial loss.
 
@@ -10,10 +10,8 @@ Instead of a model that just says *Fraud* or *Not Fraud*, this project asks: **g
 
 ### Statistics Used
 - Probability
-- Conditional Probability
-- Bayes' Theorem
-- Prior & Posterior
-- Likelihood
+- Conditional Probability (Implicitly)
+- Likelihood (Implicitly)
 - Class Imbalance
 - Calibration
 - Expected Value
