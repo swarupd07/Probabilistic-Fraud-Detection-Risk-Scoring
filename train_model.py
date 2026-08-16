@@ -81,7 +81,6 @@ def train_all_models():
     best_model = scores[best_name][1]
     print(f"\nBest model based on ROC-AUC: {best_name}")
 
-    # ---- Bayesian-style probability calibration ----
     ''' This wraps the best model and corrects its output probabilities
      so that "0.8 probability" really does mean "fraud about 80% of
      the time" on unseen data. This is what makes the probabilities
