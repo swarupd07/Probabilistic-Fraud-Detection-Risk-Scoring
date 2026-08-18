@@ -1,58 +1,66 @@
 # decision_engine.py
 
-# Thresholds
-BLOCK_THRESHOLD = 0.75
-REVIEW_THRESHOLD = 0.40
+from utils import load_thresholds
+
+DEFAULT_BLOCK_THRESHOLD = 0.65
+REVIEW_RANGE = 0.05  # 5% range below block threshold for manual review
+
+# Initial load from disk
+BLOCK_THRESHOLD, REVIEW_THRESHOLD = load_thresholds(
+    default_block=DEFAULT_BLOCK_THRESHOLD,
+    default_review=max(0.0, DEFAULT_BLOCK_THRESHOLD - REVIEW_RANGE),
+)
 
 
-def get_risk_level(fraud_probability):
-    # Turn a probability into a human-readable risk level.
- 
-    if fraud_probability >= BLOCK_THRESHOLD:
+def get_thresholds():
+    """Fetches the latest thresholds saved on disk."""
+    return load_thresholds(
+        default_block=DEFAULT_BLOCK_THRESHOLD,
+        default_review=max(0.0, DEFAULT_BLOCK_THRESHOLD - REVIEW_RANGE),
+    )
+
+
+def get_risk_level(fraud_probability, block_threshold=None, review_threshold=None):
+    if block_threshold is None:
+        block_threshold = BLOCK_THRESHOLD
+    if review_threshold is None:
+        review_threshold = REVIEW_THRESHOLD
+
+    if fraud_probability >= block_threshold:
         return "High Risk"
-    elif fraud_probability >= REVIEW_THRESHOLD:
+    elif fraud_probability >= review_threshold:
         return "Medium Risk"
     else:
         return "Low Risk"
 
 
-def get_recommended_action(fraud_probability):
-    # Turn a probability into a recommended action.
-    
-    if fraud_probability >= BLOCK_THRESHOLD:
-        return "Block Immediately"
-    elif fraud_probability >= REVIEW_THRESHOLD:
+def get_recommended_action(fraud_probability, block_threshold=None, review_threshold=None):
+    if block_threshold is None:
+        block_threshold = BLOCK_THRESHOLD
+    if review_threshold is None:
+        review_threshold = REVIEW_THRESHOLD
+
+    if fraud_probability >= block_threshold:
+        return "Block Transaction"
+    elif fraud_probability >= review_threshold:
         return "Send for Manual Review"
     else:
         return "Allow"
 
 
 def get_expected_loss(fraud_probability, amount):
-    
-    # This is basic expected value from probability theory:
-    #    E[Loss] = P(Fraud) * Amount
-
-    return round(fraud_probability * amount, 2)
+    return round(float(fraud_probability * amount), 2)
 
 
-def evaluate_transaction(fraud_probability, amount):
-    # Single function the Streamlit app will call.
-    
+def evaluate_transaction(fraud_probability, amount, block_threshold=None, review_threshold=None):
+    """
+    Evaluates a transaction given its estimated fraud probability and amount.
+    Returns fraud probability %, risk level, expected monetary loss, and action.
+    """
     return {
-        "fraud_probability": round(fraud_probability * 100, 2),  # as %
-        "risk_level": get_risk_level(fraud_probability),
+        "fraud_probability": round(float(fraud_probability * 100), 2),
+        "risk_level": get_risk_level(fraud_probability, block_threshold, review_threshold),
         "expected_loss": get_expected_loss(fraud_probability, amount),
-        "recommended_action": get_recommended_action(fraud_probability),
+        "recommended_action": get_recommended_action(fraud_probability, block_threshold, review_threshold),
     }
 
-
-"""if __name__ == "__main__":
-    # quick manual test
-    examples = [
-        (0.97, 100000),
-        (0.55, 5000),
-        (0.10, 500),
-    ]
-    for prob, amt in examples:
-        result = evaluate_transaction(prob, amt)
-        print(f"Probability={prob}, Amount={amt} -> {result}")"""
