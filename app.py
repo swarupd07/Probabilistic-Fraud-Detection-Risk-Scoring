@@ -175,14 +175,14 @@ if input_mode == "Dataset Presets":
 
     input_row = df.loc[[selected_idx], feature_cols]
     actual_label = "Fraud" if df.loc[selected_idx, "Class"] == 1 else "Genuine"
-    st.sidebar.info(f"Loaded Row #{selected_idx} | Ground Truth: **{actual_label}** | Amount: ₹{input_row['Amount'].values[0]:,.2f}")
+    st.sidebar.info(f"Loaded Row #{selected_idx} | Ground Truth: **{actual_label}** | Amount: €{input_row['Amount'].values[0]:,.2f}")
 
 elif input_mode == "Enter Manually":
     st.sidebar.write("Enter feature values:")
     values = {}
     with st.sidebar.expander("Key Features (Time & Amount)", expanded=True):
         values["Time"] = st.number_input("Time (seconds)", value=float(df["Time"].median()))
-        values["Amount"] = st.number_input("Amount (₹)", value=float(df["Amount"].median()), min_value=0.0)
+        values["Amount"] = st.number_input("Amount (€)", value=float(df["Amount"].median()), min_value=0.0)
 
     with st.sidebar.expander("PCA Features (V1 - V28)", expanded=False):
         for col in [c for c in feature_cols if c not in ["Time", "Amount"]]:
@@ -254,7 +254,7 @@ action_icon = action_colors.get(result["recommended_action"], "⚪")
 
 col1.metric("Predicted Fraud Risk", f"{result['fraud_probability']:.2f}%")
 col2.metric("Risk Tier", result["risk_level"])
-col3.metric("Expected Loss", f"₹{result['expected_loss']:,.2f}")
+col3.metric("Expected Loss", f"€{result['expected_loss']:,.2f}")
 col4.metric("Recommended Action", f"{action_icon} {result['recommended_action']}")
 
 # Decision Gauge / Risk Bar
@@ -455,5 +455,5 @@ with st.expander("📁 Dataset Summary & Imbalance Overview"):
         st.write(f"- Total Transactions: **{len(df):,}**")
         st.write(f"- Genuine Transactions: **{(df['Class'] == 0).sum():,}** ({(df['Class'] == 0).mean() * 100:.2f}%)")
         st.write(f"- Fraud Transactions: **{(df['Class'] == 1).sum():,}** ({(df['Class'] == 1).mean() * 100:.4f}%)")
-        st.write(f"- Mean Transaction Amount: **₹{df['Amount'].mean():,.2f}**")
-        st.write(f"- Max Transaction Amount: **₹{df['Amount'].max():,.2f}**")
+        st.write(f"- Mean Transaction Amount: **€{df['Amount'].mean():,.2f}**")
+        st.write(f"- Max Transaction Amount: **€{df['Amount'].max():,.2f}**")
