@@ -95,16 +95,16 @@ def find_cost_optimal_threshold(y_true, y_scores, amounts, false_positive_cost=1
 
     if verbose:
         print("\n--- Cost-Based Threshold Optimization ---")
-        print(f"False positive friction cost assumed: Rs {false_positive_cost} per case")
+        print(f"False positive friction cost assumed: € {false_positive_cost} per case")
         print(f"Cost-optimal Block threshold: {best_threshold:.2f}")
-        print(f"Estimated total cost at that threshold: Rs {best_cost:,.2f}")
+        print(f"Estimated total cost at that threshold: € {best_cost:,.2f}")
 
     return round(float(best_threshold), 2), round(float(best_cost), 2), cost_curve
 
 
 
 def get_precision_recall_curve(y_true, y_scores):
-    """Thin wrapper so app.py doesn't need to import sklearn directly."""
+    # Thin wrapper so app.py doesn't need to import sklearn directly.
     precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
     return precision, recall, thresholds
 
