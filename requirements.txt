@@ -6,3 +6,4 @@ plotly
 streamlit
 joblib
 shap
+imbalanced-learn
