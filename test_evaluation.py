@@ -68,8 +68,8 @@ def evaluate_on_test_set(block_threshold=None, review_threshold=None, false_posi
     fp_cost = float(false_positives.sum() * false_positive_cost)
     total_cost = fn_cost + fp_cost
 
-    print(f"Estimated cost on TEST set at deployed Block threshold: Rs {total_cost:,.2f}")
-    print(f"  (missed-fraud cost: Rs {fn_cost:,.2f}, false-alarm cost: Rs {fp_cost:,.2f})")
+    print(f"Estimated cost on TEST set at deployed Block threshold: € {total_cost:,.2f}")
+    print(f"  (missed-fraud cost: € {fn_cost:,.2f}, false-alarm cost: € {fp_cost:,.2f})")
 
     return {
         "roc_auc": round(float(roc_auc), 4),
